@@ -8,6 +8,7 @@ import { UserService } from '@app/user/user.service';
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(private readonly userService: UserService) {}
+
   async use(req: IExpressRequest, res: Response, next: NextFunction) {
     if (!req.headers.authorization) {
       req.user = null;
@@ -21,6 +22,8 @@ export class AuthMiddleware implements NestMiddleware {
       const decode = verify(token, JWT_SECRET);
 
       const user = await this.userService.findById(decode.id);
+      console.log('user decode', user);
+
       req.user = user;
       next();
     } catch (error) {

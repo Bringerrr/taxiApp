@@ -10,6 +10,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { ArticleModule } from './article/article.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { join } from 'path';
     TypeOrmModule.forRoot(ormconfig),
     UserModule,
     ChatModule,
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],

@@ -1,8 +1,16 @@
+import { LoginUserDto } from '@app/user/dto/createUser.dto';
+import { AuthGuard } from '@app/user/guards/auth.guard';
 import { CreateUserInput } from '@app/user/inputs/createUser.input';
 import { LoginUserInput } from '@app/user/inputs/loginUser.input';
 import { UpdateUserInput } from '@app/user/inputs/updateUser.input';
+import { TUserResponse } from '@app/user/types/user.type';
+import {
+  IUserResponse,
+  UserLoginResponse,
+} from '@app/user/types/userResponse.interface';
 import { UserEntity } from '@app/user/user.entity';
 import { UserService } from '@app/user/user.service';
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 @Resolver('users')
@@ -24,14 +32,15 @@ export class UserResolver {
   }
 
   @Query(() => UserEntity)
+  @UseGuards(AuthGuard)
   async getUser(@Args('id') id: number): Promise<UserEntity> {
     return await this.userService.findById(id);
   }
 
-  @Query(() => UserEntity)
+  @Query(() => UserLoginResponse)
   async loginUser(
-    @Args('loginUser') userLoginInput: LoginUserInput,
-  ): Promise<UserEntity> {
+    @Args('loginUser') userLoginInput: LoginUserDto,
+  ): Promise<IUserResponse> {
     return await this.userService.loginUser(userLoginInput);
   }
 }

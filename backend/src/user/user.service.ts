@@ -7,10 +7,11 @@ import { sign } from 'jsonwebtoken';
 import { JWT_SECRET } from '@app/config';
 import { IUserResponse } from './types/userResponse.interface';
 import { compare } from 'bcrypt';
-import { TUserLogin } from './types/user.type';
+import { TUserLogin, TUserResponse } from './types/user.type';
 import { UpdateUserInput } from './inputs/updateUser.input';
 import { CreateUserInput } from './inputs/createUser.input';
-import { CreateUserDto } from './dto/createUser.dto';
+import { CreateUserDto, LoginUserDto } from './dto/createUser.dto';
+import { LoginUserInput } from './inputs/loginUser.input';
 
 @Injectable()
 export class UserService {
@@ -24,8 +25,6 @@ export class UserService {
   }
 
   async createUser(createUserInput: CreateUserDto): Promise<UserEntity> | null {
-    console.log('createUserInput', createUserInput);
-
     const userByEmail = await this.userRepository.findOne({
       email: createUserInput.email,
     });
@@ -39,7 +38,7 @@ export class UserService {
     return await this.userRepository.save(newUser);
   }
 
-  async loginUser(userLogin: TUserLogin): Promise<UserEntity> {
+  async loginUser(userLogin: LoginUserDto): Promise<IUserResponse> {
     const userByEmail = await this.userRepository.findOne(
       {
         email: userLogin.email,
@@ -62,7 +61,7 @@ export class UserService {
 
     delete userByEmail.password;
 
-    return await this.userRepository.save(userByEmail);
+    return await this.buildUserResponse(userByEmail);
   }
 
   async updateUser(updateUserInput: UpdateUserInput): Promise<UserEntity> {
@@ -87,10 +86,8 @@ export class UserService {
 
   buildUserResponse(user: UserEntity): IUserResponse {
     return {
-      user: {
-        ...user,
-        token: this.generateJwt(user),
-      },
+      user,
+      token: this.generateJwt(user),
     };
   }
 

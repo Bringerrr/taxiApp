@@ -1,6 +1,13 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { hash } from 'bcrypt';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { ArticleEntity } from '@app/article/article.entity';
 
 @ObjectType()
 @Entity({ name: 'users' })
@@ -25,4 +32,7 @@ export class UserEntity {
   async hashPassword() {
     this.password = await hash(this.password, 10);
   }
+
+  @OneToMany(() => ArticleEntity, (article) => article.creator)
+  articles: ArticleEntity;
 }
