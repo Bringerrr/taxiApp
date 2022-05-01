@@ -1,0 +1,37 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  createUser(createUser: CreateUserInput!): UserEntity!
+  updateUser(updateUser: UpdateUserInput!): UserEntity!
+}
+
+type Query {
+  getUser(id: Float!): UserEntity!
+  loginUser(loginUser: LoginUserInput!): UserEntity!
+}
+
+input UpdateUserInput {
+  email: String
+  id: ID!
+  username: String
+}
+
+type UserEntity {
+  email: String!
+  id: ID!
+  password: String!
+  username: String!
+}
