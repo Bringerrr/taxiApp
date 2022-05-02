@@ -1,5 +1,5 @@
 import { IExpressRequest } from '@app/types/expressRequest.interface';
-import { HttpException, Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import { NextFunction } from 'express';
 import { JWT_SECRET } from '@app/config';
@@ -22,7 +22,6 @@ export class AuthMiddleware implements NestMiddleware {
       const decode = verify(token, JWT_SECRET);
 
       const user = await this.userService.findById(decode.id);
-      console.log('user decode', user);
 
       req.user = user;
       next();

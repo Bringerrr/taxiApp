@@ -44,12 +44,12 @@ export class ArticleEntity {
   @Column({ default: 0 })
   favorites: number;
 
+  @Field(() => UserEntity)
+  @ManyToOne(() => UserEntity, (user) => user.articles, { eager: true })
+  creator: UserEntity;
+
   @BeforeUpdate()
   updateTimestamp() {
     this.updatedAt = new Date();
   }
-
-  @Field(() => UserEntity)
-  @ManyToOne(() => UserEntity, (user) => user.articles)
-  creator: UserEntity;
 }
